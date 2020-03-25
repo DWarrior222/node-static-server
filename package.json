@@ -1,0 +1,20 @@
+{
+  "name": "node-static-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "http-proxy-middleware": "^0.19.1",
+    "jade": "^1.11.0",
+    "multer": "^1.4.1",
+    "youziku": "^8.0.0"
+  }
+}
