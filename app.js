@@ -49,6 +49,9 @@ app.use('/proxy', proxy({
 app.listen(port)
 console.log('listen port ' + port)
 
+app.get('/', (req, res) => {
+    res.render('upload', {})
+})
 
 app.get('/admin/upload', (req, res) => {
     res.render('upload', {})
