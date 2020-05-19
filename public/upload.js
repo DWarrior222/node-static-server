@@ -24,6 +24,8 @@ $(function() {
             if (res.code === 10001) {
                 alert(res.msg)
             }
+            $('#img-url').text('上传成功，url 为：http://' + location.host + res.url_list[0])
+            alert('上传成功，url 为：http://' + location.host + res.url_list[0])
         }).fail(function(res) {
             console.log(res)
             alert('网络错误')

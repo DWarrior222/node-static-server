@@ -139,7 +139,7 @@ app.post('/admin/uploadFile', upload.array('nss', 10), (req, res) => {
             var type = reg.exec(item.originalname)
             type = type ? type[0] : '.png'
             fs.renameSync(item.path, "./static/image/" + item.filename + type)
-            urlList.push(PUBLIC_URL + '/image/' + item.filename + type)
+            urlList.push('/image/' + item.filename + type)
         })
         
         res.json({
