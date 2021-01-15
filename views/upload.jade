@@ -6,9 +6,9 @@ html
     style.
       body {
         text-align: center;
-        padding-top: 150px;
         margin: 0px;
-        background: #f8f8f8
+        background: #f8f8f8;
+        padding: 0;
       }
       .upload {
         color: red;
@@ -17,7 +17,11 @@ html
         margin-right: 15px;
       }
       .content {
-        height: 300px;
+        padding-bottom: 100px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
       }
       .footer {
         text-align: center;
@@ -38,18 +42,23 @@ html
         padding: 0 50px;
         font-size: 20px;
       }
+      .container {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
   body
-    header
-        正在建设中。。
-    h1 技术学习—图片上传服务
-    .content 
-        .input.upload
-            input(type="button", value="上传图片", id="upload-btn")
-            input(type="file", id="file")
-            p(style="font-size: 16px; color: #454a54;") * 请上传1080P且文件不超过2M的JPG/PNG文件
-            p(id="img-url")
-    .footer
-        @2020 guanshuaijie.cn，关帅杰 All Rights Reserved. 
-        a(href="https://beian.miit.gov.cn/#/Integrated/index", class="icp") 京ICP备20020093号-1
+    .container
+      .content 
+          h1 技术学习—图片上传服务
+          .input.upload
+              input(type="button", value="上传图片", id="upload-btn")
+              input(type="file", id="file")
+              p(style="font-size: 16px; color: #454a54;") * 请上传1080P且文件不超过2M的JPG/PNG文件
+              p(id="img-url")
+      .footer
+          @2020 guanshuaijie.cn，关帅杰 All Rights Reserved. 
+          a(href="https://beian.miit.gov.cn/#/Integrated/index", class="icp") 京ICP备20020093号-1
     script(src="/jquery.min.js")
     script(src="/upload.js")

@@ -2,24 +2,10 @@ var express = require('express')
 var bodyParser = require('body-parser')
 var fs = require('fs')
 var path = require('path')
-var multer  = require('multer')
-var upload = multer({dest:'static/'})
-var proxy = require('http-proxy-middleware')
-var youziku =require("youziku");
-var youzikuClient = new youziku.youzikuClient("a69980333b5a9ca8e5538b5ea53dfa98")
-
-var entity = {
-    AccessKey:'b21724959e3e4293882a2cd19f9303b4',
-    Content:'有字库，让中文跃上云端！'
-};
-
-youzikuClient.getFontFace(entity, function (result) {
-    console.log(result.FontFamily);
-    console.log(result.FontFace);
-    console.log(result.Code);
-    console.log(result.Tag);
-    console.log(result.ErrorMessage);
-});
+var multer = require('multer')
+var upload = multer({
+    dest: 'static/'
+})
 
 var types = require('./contentType').types
 var config = require('./config')
@@ -28,22 +14,15 @@ var env = require('./env')
 process.env = env
 var staticPath = 'static'
 var port = process.env.PORT || 3000
-var PUBLIC_URL = process.env.STATIC_URI + ':' + process.env.PORT
 
 var app = express()
-var router = express.Router()
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.set('views', './views')
 app.set('view engine', 'jade')
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}))
-app.use('/proxy', proxy({ 
-    target: 'http://www.qimai.cn', 
-    changeOrigin: true, 
-    pathRewrite: {
-        '^/proxy/': '/' // rewrite path
-    } 
+app.use(bodyParser.urlencoded({
+    extended: false
 }))
 
 app.listen(port)
@@ -62,7 +41,7 @@ app.get('/video', (req, res) => {
 })
 
 
-function fileTypeValidate (file) {
+function fileTypeValidate(file) {
     if (!file) {
         return false
     }
@@ -77,7 +56,8 @@ function fileTypeValidate (file) {
         return 1
     }
 }
-function fileSizeValidate (file) {
+
+function fileSizeValidate(file) {
     if (!file) {
         return false
     }
@@ -89,7 +69,7 @@ function fileSizeValidate (file) {
     }
 }
 
-function deleteFile (files) {
+function deleteFile(files) {
     files = files || []
     files.forEach((item, index) => {
         fs.unlink(item.path, function (err) {
@@ -119,7 +99,7 @@ app.post('/admin/uploadFile', upload.array('nss', 10), (req, res) => {
             typeValidateResult = fileTypeValidate(item)
             sizeValidateResult = fileSizeValidate(item)
         }
-       
+
     })
     if (!typeValidateResult) {
         deleteFile(files)
@@ -141,7 +121,7 @@ app.post('/admin/uploadFile', upload.array('nss', 10), (req, res) => {
             fs.renameSync(item.path, "./static/image/" + item.filename + type)
             urlList.push('/image/' + item.filename + type)
         })
-        
+
         res.json({
             url_list: urlList
         })
@@ -150,25 +130,23 @@ app.post('/admin/uploadFile', upload.array('nss', 10), (req, res) => {
 
 // 下载图片
 app.get('/download/*', function (req, res) {
-    console.log(req.url)
     let filePath = req.url.replace('/download', './static')
-    
-    fs.readFile(filePath, function(err, data){  
-        if (err) {  
-            res.end("Read file failed!");  
-            return;  
-        }  
-        res.writeHead(200,{  
+
+    fs.readFile(filePath, function (err, data) {
+        if (err) {
+            res.end("Read file failed!");
+            return;
+        }
+        res.writeHead(200, {
             'Content-Type': 'application/octet-stream', //告诉浏览器这是一个二进制文件  
             'Content-Disposition': 'attachment;', //告诉浏览器这是一个需要下载的文件  
-        });  
-        res.end(data)  
+        });
+        res.end(data)
     })
 })
 
 // 获取图片
 app.get('/image/*', function (req, res) {
-    console.log(req.url)
     var pathName = req.url
     var realPath = staticPath + pathName
     var ext = path.extname(realPath)
@@ -192,10 +170,10 @@ app.get('/image/*', function (req, res) {
         if (err || !stat) {
             res.set({
                 'Content-Type': contentType,
-            })      
+            })
             res.status(500).end('Server exception')
         }
-        
+
         // 获取文件最后修改的时间，根据世界时 (UTC) 把 Date 对象转换为字符串
         var lastModified = stat.mtime.toUTCString()
         // 设置头部的Last-modified
@@ -207,7 +185,6 @@ app.get('/image/*', function (req, res) {
             fs.exists(realPath, function (exists) {
                 if (!exists) {
                     // 没有文件，返回404
-                    // res.set('Content-Type', 'text/plain');
                     res.set({
                         'Content-Type': contentType,
                     })
@@ -218,7 +195,7 @@ app.get('/image/*', function (req, res) {
                         if (err) {
                             res.set({
                                 'Content-Type': contentType,
-                            })      
+                            })
                             res.status(500).end('Server exception')
                         } else {
                             res.set({
@@ -226,9 +203,6 @@ app.get('/image/*', function (req, res) {
                             })
                             res.write(file, 'binary')
                             res.status(200).end()
-                
-                            // 返回文件的路径
-                            // res.status(200).send(realPath)
                         }
                     })
                 }
@@ -239,10 +213,11 @@ app.get('/image/*', function (req, res) {
 
 // 获取视频
 app.get('/video/*', function (req, res) {
-    console.log('reqreqreqreqreqreq')
     var pathName = req.url
     var realPath = staticPath + pathName
-    let head = { 'Content-Type': 'video/mp4' };
+    let head = {
+        'Content-Type': 'video/mp4'
+    };
     // 需要设置HTTP HEAD
     res.writeHead(200, head);
     fs.createReadStream(realPath)
