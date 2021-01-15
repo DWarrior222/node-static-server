@@ -36,11 +36,6 @@ app.get('/admin/upload', (req, res) => {
     res.render('upload', {})
 })
 
-app.get('/video', (req, res) => {
-    res.render('video', {})
-})
-
-
 function fileTypeValidate(file) {
     if (!file) {
         return false
