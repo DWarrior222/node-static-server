@@ -1,0 +1,18 @@
+language: node_js
+node_js: 12.18.3
+branches:
+  only:
+  - master
+before_install:
+- openssl aes-256-cbc -K $encrypted_1a747b613118_key -iv $encrypted_1a747b613118_iv
+  -in id_rsa_travis.enc -out ~/.ssh/id_rsa_travis -d
+- chmod 600 ~/.ssh/id_rsa_travis
+- echo "before_install"
+install:
+- echo "install"
+script: true
+after_success:
+- "./build.sh"
+- echo "after_success"
+addons:
+  ssh_known_hosts: 49.235.241.244
