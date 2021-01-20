@@ -113,6 +113,11 @@ app.post('/admin/uploadFile', upload.array('nss', 10), (req, res) => {
             var reg = new RegExp(/\..+$/ig)
             var type = reg.exec(item.originalname)
             type = type ? type[0] : '.png'
+            try {
+                fs.accessSync(path.join(__dirname, './static/image'), fs.constants.R_OK | fs.constants.W_OK);
+            } catch (err) {
+                fs.mkdirSync(path.join(__dirname, './static/image'), { recursive: true },)
+            }
             fs.renameSync(item.path, "./static/image/" + item.filename + type)
             urlList.push('/image/' + item.filename + type)
         })
