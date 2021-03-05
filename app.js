@@ -218,6 +218,11 @@ app.get('/video/*', function (req, res) {
     let head = {
         'Content-Type': 'video/mp4'
     };
+    res.setHeader("Access-Control-Allow-Origin","*");
+    //跨域允许的header类型
+    res.setHeader("Access-Control-Allow-Headers","Content-type,Content-Length,Authorization,Accept,X-Requested-Width");
+    //跨域允许的请求方式
+    res.setHeader("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
     // 需要设置HTTP HEAD
     res.writeHead(200, head);
     fs.createReadStream(realPath)
